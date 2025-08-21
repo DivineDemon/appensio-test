@@ -2,15 +2,11 @@ import { Route, Routes } from "react-router-dom";
 
 import AuthLayout from "./components/auth-layout";
 import GlobalLayout from "./components/global-layout";
-import CallLogs from "./pages/call-logs";
-import Dashboard from "./pages/dashboard";
-import EditPassword from "./pages/edit-password";
 import ForgotPassword from "./pages/forgot-password";
 import LegalNotice from "./pages/legal-notice";
 import Login from "./pages/login";
 import MyBusinesses from "./pages/my-businesses";
 import PrivacyPolicy from "./pages/privacy-policy";
-import Profile from "./pages/profile";
 import ResetPassword from "./pages/reset-password";
 import Support from "./pages/support";
 import TermsAndConditions from "./pages/terms-and-conditions";
@@ -28,12 +24,12 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
       <Route element={<GlobalLayout />}>
-        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/support" element={<Support />} />
-        <Route path="/call-logs" element={<CallLogs />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/my-agents" element={<MyBusinesses />} />
-        <Route path="/edit-password" element={<EditPassword />} />
+        {/* <Route path="/call-logs" element={<CallLogs />} /> */}
+        <Route path="/dashboard" element={<MyBusinesses />} />
+        {/* <Route path="/my-agents" element={<MyBusinesses />} /> */}
+        {/* <Route path="/edit-password" element={<EditPassword />} /> */}
         <Route path="/my-agents/:id/:a_id" element={<ViewBusiness />} />
       </Route>
       <Route path="/legal-notice" element={<LegalNotice />} />

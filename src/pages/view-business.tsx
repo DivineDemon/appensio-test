@@ -1,53 +1,15 @@
-import dayjs from "dayjs";
-import { ChartCircle, I3Dcube } from "iconsax-react";
 import { useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
-import CallVolumeGraph from "@/components/call-volume-graph";
+import { useLocation } from "react-router-dom";
 import BusinessHoursConfiguration from "@/components/my-businesses/business/business-hours-configuration";
 import CallLogs from "@/components/my-businesses/business/call-logs";
 import EditAgent from "@/components/my-businesses/business/edit-agent";
 import KnowledgeBase from "@/components/my-businesses/knowledge/knowledge-base";
 import ProductCatalog from "@/components/my-businesses/product/product-catalog";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UsageGraph from "@/components/usage-graph";
-import { cn, formatBusinessStats } from "@/lib/utils";
-import { RootState } from "@/store";
-import { useGetBusinessStatsQuery } from "@/store/services/business";
-import { usePackageStatsQuery } from "@/store/services/stats";
-import { setEndDate, setStartDate } from "@/store/slices/global";
 
 const ViewBusiness = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
   const { search } = useLocation();
-  const [activeTab, setActiveTab] = useState<string>("Dashboard");
-  const { start_date, end_date } = useSelector((state: RootState) => state.global);
-
-  const { data, isLoading } = useGetBusinessStatsQuery(
-    {
-      start_date: dayjs(start_date).format("YYYY-MM-DD"),
-      end_date: dayjs(end_date).format("YYYY-MM-DD"),
-      business_id: id || "",
-    },
-    {
-      skip: !start_date || !end_date || !id,
-      refetchOnMountOrArgChange: true,
-    },
-  );
-
-  const { data: packageStats } = usePackageStatsQuery(id || "", {
-    skip: !id,
-    refetchOnMountOrArgChange: true,
-  });
+  const [activeTab, setActiveTab] = useState<string>("Agent Hours");
 
   const query = useMemo(() => {
     const params = new URLSearchParams(search);
@@ -63,18 +25,16 @@ const ViewBusiness = () => {
           {query.name}&nbsp;-&nbsp;{activeTab}
         </span>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[750px]">
-          <TabsList className="grid w-full grid-cols-6">
-            {["Dashboard", "Agent Hours", "Product Catalog", "Edit Agent", "Knowledge Base", "Call Logs"].map(
-              (tab, idx) => (
-                <TabsTrigger key={idx} value={tab} className="w-full text-center">
-                  {tab}
-                </TabsTrigger>
-              ),
-            )}
+          <TabsList className="grid w-full grid-cols-5">
+            {["Agent Hours", "Product Catalog", "Edit Agent", "Knowledge Base", "Call Logs"].map((tab, idx) => (
+              <TabsTrigger key={idx} value={tab} className="w-full text-center">
+                {tab}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </Tabs>
       </div>
-      <div className="flex w-full items-center justify-end gap-2.5 py-5">
+      {/* <div className="flex w-full items-center justify-end gap-2.5 py-5">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" variant="outline">
@@ -115,14 +75,13 @@ const ViewBusiness = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
-      {isLoading ? (
+      </div> */}
+      {/* {isLoading ? (
         <div className="flex h-[144px] w-full items-center justify-center">
           <ChartCircle size={40} color="#0B33A4" className="animate-spin" />
         </div>
       ) : activeTab !== "Knowledge Base" && activeTab !== "Call Logs" ? (
         <div className="grid w-full grid-cols-1 gap-2.5 md:grid-cols-4">
-          {/* @ts-expect-error Data Loading */}
           {formatBusinessStats(data).map((card) => (
             <div
               key={card.id}
@@ -166,13 +125,13 @@ const ViewBusiness = () => {
             </span>
           </div>
         </div>
-      ) : null}
-      {activeTab === "Dashboard" && (
+      ) : null} */}
+      {/* {activeTab === "Dashboard" && (
         <div className="mt-3.5 grid w-full grid-cols-2 items-start justify-start gap-3.5 md:h-[calc(100vh-382px)] md:overflow-y-auto">
           <CallVolumeGraph className="h-full" type="business" />
           <UsageGraph className="h-full" type="business" />
         </div>
-      )}
+      )} */}
       {activeTab === "Agent Hours" && <BusinessHoursConfiguration />}
       {activeTab === "Product Catalog" && <ProductCatalog />}
       {activeTab === "Edit Agent" && <EditAgent />}

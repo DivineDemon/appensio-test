@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { api } from "./core";
 
 export const productApi = api.injectEndpoints({
@@ -11,7 +10,7 @@ export const productApi = api.injectEndpoints({
     }),
     getAllProducts: build.query({
       query: (business_id: string) => ({
-        url: `/business/product/all/${business_id}`,
+        url: `/testing/product/all/${business_id}`,
         method: "GET",
       }),
       transformResponse: (response: Product[]) => response,
@@ -19,7 +18,7 @@ export const productApi = api.injectEndpoints({
     }),
     deleteProduct: build.mutation({
       query: ({ business_id, product_id }: { product_id: string; business_id: string }) => ({
-        url: `/business/product/${product_id}`,
+        url: `/testing/product/${product_id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Products"],
@@ -31,7 +30,7 @@ export const productApi = api.injectEndpoints({
     }),
     postProduct: build.mutation({
       query: ({ business_id, data }: { business_id: string; data: PostProduct }) => ({
-        url: `/business/product/${business_id}`,
+        url: `/testing/product/${business_id}`,
         method: "POST",
         body: data,
       }),
@@ -44,7 +43,7 @@ export const productApi = api.injectEndpoints({
     }),
     updateProduct: build.mutation({
       query: ({ business_id, product_id, data }: { business_id: string; product_id: string; data: PostProduct }) => ({
-        url: `/business/product/${product_id}`,
+        url: `/testing/product/${product_id}`,
         method: "PATCH",
         body: data,
       }),
@@ -57,14 +56,14 @@ export const productApi = api.injectEndpoints({
     }),
     getProduct: build.query({
       query: (product_id: string) => ({
-        url: `/business/product/${product_id}`,
+        url: `/testing/product/${product_id}`,
         method: "GET",
       }),
       transformResponse: (response: ProductDetails) => response,
     }),
     getProductTypes: build.query({
       query: () => ({
-        url: "/business/product/get-distinct-products",
+        url: "/testing/product/get-distinct-products",
         method: "GET",
       }),
       transformResponse: (response: ProductTypes[]) => response,

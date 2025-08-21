@@ -1,22 +1,16 @@
-import { CallAdd, ChartCircle, DocumentDownload } from "iconsax-react";
+import { ChartCircle, DocumentDownload } from "iconsax-react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { type Country } from "react-phone-number-input";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import UploadIcon from "@/assets/icons/upload.svg";
 import { columns } from "@/components/call-logs/call-logs-columns";
 import DataTable from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
-import {
-  cn,
-  fetchCountryFromIP,
-  handleDownload,
-  validateAndExtractPhoneNumbers,
-  validatePhoneNumber,
-} from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import { fetchCountryFromIP, handleDownload, validateAndExtractPhoneNumbers, validatePhoneNumber } from "@/lib/utils";
 import { useCallLogsQuery, useSyncDataWithVapiMutation } from "@/store/services/call";
 
 const CallLogs = () => {
@@ -72,40 +66,18 @@ const CallLogs = () => {
 
   return (
     <div className="mt-5 flex h-full w-full flex-col items-start justify-start gap-5 overflow-y-auto md:gap-5">
-      <div className="flex w-full flex-col items-center justify-center gap-5 border border-[#E4E4E7] py-5 md:gap-10 md:py-10">
-        <div className="flex w-full flex-col items-center justify-center gap-5 md:flex-row">
-          <div
-            onClick={() => setSelectedTab("add")}
-            className={cn("flex w-80 cursor-pointer items-center justify-center gap-5 rounded-xl py-5 lg:w-96", {
-              "bg-primary text-white": selectedTab === "add",
-              "bg-[#F4F4F5] text-black": selectedTab === "upload",
-            })}
-          >
-            <CallAdd size={30} color={selectedTab === "add" ? "#FFFFFF" : "#000000"} />
-            <span className="font-bold text-[16px] leading-[16px]">Add a New Contact</span>
-          </div>
-          <div
-            onClick={() => setSelectedTab("upload")}
-            className={cn("flex w-80 cursor-pointer items-center justify-center gap-5 rounded-xl py-5 lg:w-96", {
-              "bg-primary text-white": selectedTab === "upload",
-              "bg-[#F4F4F5] text-black": selectedTab === "add",
-            })}
-          >
-            <img
-              src={UploadIcon}
-              className={cn("size-[35px]", {
-                invert: selectedTab === "upload",
-              })}
-            />
-            <div className="flex flex-col items-center justify-center gap-2">
-              <span className="w-full text-center font-bold text-[16px] leading-[16px]">Upload Phone List</span>
-              <span className="w-full text-center text-[12px] leading-[12px]">Supported Formats: XLSX</span>
-            </div>
-          </div>
+      <div className="flex w-full items-center justify-end gap-5">
+        <div className="flex items-center justify-center gap-2.5">
+          <span className="font-medium text-[12px] text-muted-foreground leading-[12px]">Single</span>
+          <Switch
+            checked={selectedTab === "upload"}
+            onCheckedChange={() => setSelectedTab(selectedTab === "add" ? "upload" : "add")}
+          />
+          <span className="font-medium text-[12px] text-muted-foreground leading-[12px]">Bulk</span>
         </div>
         {selectedTab === "add" ? (
           <PhoneInput
-            className="mx-auto w-80 lg:w-96"
+            className="w-80 lg:w-96"
             defaultCountry={countryCode as Country}
             placeholder="Enter Phone Number"
             value={phone[0]}
@@ -124,11 +96,11 @@ const CallLogs = () => {
             </Button>
           </div>
         )}
-        <Button onClick={handleSubmit} type="button" disabled={isLoading} variant="default" size="lg">
+        <Button onClick={handleSubmit} type="button" disabled={isLoading} variant="default">
           {isLoading ? <ChartCircle size={20} color="#FFFFFF" className="animate-spin" /> : "Make Call"}
         </Button>
       </div>
-      <div className="h-[calc(100vh-500px)] w-full overflow-y-auto">
+      <div className="h-[calc(100vh-228px)] w-full overflow-y-auto">
         {fetching ? (
           <div className="flex h-full w-full items-center justify-center">
             <ChartCircle size={40} color="#0B33A4" className="animate-spin" />

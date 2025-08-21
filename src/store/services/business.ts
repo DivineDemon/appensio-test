@@ -9,6 +9,13 @@ export const businessApi = api.injectEndpoints({
         body: data,
       }),
     }),
+    getBusiness: build.query({
+      query: (business_id: string) => ({
+        url: `/testing/business/${business_id}`,
+        method: "GET",
+      }),
+      transformResponse: (response: BusinessDetails) => response,
+    }),
     getBusinessHours: build.query({
       query: (business_id: string) => ({
         url: `/business-timing/${business_id}`,
@@ -18,7 +25,7 @@ export const businessApi = api.injectEndpoints({
     }),
     getMyBusinesses: build.query({
       query: () => ({
-        url: "/developer/business/my-businesses",
+        url: "/testing/business/my-businesses_atif_testing",
         method: "GET",
       }),
       providesTags: ["Businesses"],
@@ -90,16 +97,38 @@ export const businessApi = api.injectEndpoints({
       }),
       transformResponse: (response: BusinessAgentConfig) => response,
     }),
+    updateBusinessVapi: build.mutation({
+      query: (business_id: string) => ({
+        url: `/testing/business/sync/${business_id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Business"],
+    }),
+    updateBusiness: build.mutation({
+      query: ({ business_id, data }: { business_id: string; data: UpdateBusinessBody }) => ({
+        url: `/testing/business/${business_id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        void dispatch(businessApi.endpoints.updateBusinessVapi.initiate(arg.business_id));
+      },
+      invalidatesTags: ["Business"],
+    }),
   }),
 });
 
 export const {
+  useGetBusinessQuery,
   useGetMyBusinessesQuery,
   useGetBusinessHoursQuery,
   useGetBusinessStatsQuery,
   useGetBusinessUsageQuery,
+  useUpdateBusinessMutation,
   useGetPromptTemplatesQuery,
   usePostBusinessHoursMutation,
+  useUpdateBusinessVapiMutation,
   useUpdateBusinessAgentMutation,
   useGetBusinessAgentConfigQuery,
   useGetBusinessCallVolumeDataQuery,

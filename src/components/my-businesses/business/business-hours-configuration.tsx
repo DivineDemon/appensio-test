@@ -128,7 +128,7 @@ const BusinessHoursConfiguration = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-5 flex h-[calc(100vh-336px)] w-full flex-col items-start justify-start gap-5 overflow-y-auto md:gap-5"
+        className="mt-5 flex h-[calc(100vh-172px)] w-full flex-col items-start justify-start gap-5 overflow-y-auto md:gap-5"
       >
         <div className="flex w-full items-center justify-center gap-5 border-[#D9D9D9] border-b pb-5">
           <span className="flex-1 text-left font-bold text-[24px] leading-[24px]">Operating Days</span>

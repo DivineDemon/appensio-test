@@ -4,7 +4,7 @@ export const knowledgeApi = api.injectEndpoints({
   endpoints: (build) => ({
     getKnowledgeBase: build.query({
       query: (business_id: string) => ({
-        url: `/business/files/all/${business_id}`,
+        url: `/testing/files/all/${business_id}`,
         method: "GET",
       }),
       providesTags: ["Knowledge"],
@@ -18,7 +18,7 @@ export const knowledgeApi = api.injectEndpoints({
     }),
     uploadDocument: build.mutation({
       query: ({ business_id, body }: { business_id: string; body: FormData }) => ({
-        url: `/business/query-tools/${business_id}/upload-file-and-create-tool`,
+        url: `/testing/query-tools/${business_id}/upload-file-and-create-tool`,
         method: "POST",
         body,
       }),
@@ -31,7 +31,7 @@ export const knowledgeApi = api.injectEndpoints({
     }),
     updateKnowledgeBase: build.mutation({
       query: ({ business_id, body }: { business_id: string; body: FormData }) => ({
-        url: `/business/query-tools/query-tool/${business_id}`,
+        url: `/testing/query-tools/query-tool/${business_id}`,
         method: "PATCH",
         body,
       }),
@@ -44,21 +44,21 @@ export const knowledgeApi = api.injectEndpoints({
     }),
     deleteDocument: build.mutation({
       query: (document_id: string) => ({
-        url: `/business/files/${document_id}`,
+        url: `/testing/files/${document_id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Knowledge"],
     }),
     checkExistence: build.query({
       query: (business_id: string) => ({
-        url: `/business/query-tools/exists/${business_id}`,
+        url: `/testing/query-tools/exists/${business_id}`,
         method: "GET",
       }),
       transformResponse: (response: { has_query_tool: true }) => response,
     }),
     getFile: build.query({
       query: (file_id: string) => ({
-        url: `/business/files/content/${file_id}`,
+        url: `/testing/files/content/${file_id}`,
         method: "GET",
       }),
       transformResponse: (response: { file_id: string; file_content: string }) => response,

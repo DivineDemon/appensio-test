@@ -8,18 +8,18 @@ export const navItems = [
     name: "Dashboard",
     link: "/dashboard",
   },
+  // {
+  //   id: 2,
+  //   name: "My Agents",
+  //   link: "/my-agents",
+  // },
+  // {
+  //   id: 3,
+  //   name: "Call Logs",
+  //   link: "/call-logs",
+  // },
   {
     id: 2,
-    name: "My Agents",
-    link: "/my-agents",
-  },
-  {
-    id: 3,
-    name: "Call Logs",
-    link: "/call-logs",
-  },
-  {
-    id: 4,
     name: "Support",
     link: "/support",
   },

@@ -4,7 +4,7 @@ export const callApi = api.injectEndpoints({
   endpoints: (build) => ({
     callLogs: build.query({
       query: (assistant_id: string) => ({
-        url: `/business/vapi_call_logs/by-assistant?assistant_id=${assistant_id}`,
+        url: `/testing/vapi_call_logs/by-assistant?assistant_id=${assistant_id}`,
         method: "GET",
       }),
       providesTags: ["Calls"],
@@ -12,7 +12,7 @@ export const callApi = api.injectEndpoints({
     }),
     createCall: build.mutation({
       query: (data: { customer_number: string; bussiness_id: string }) => ({
-        url: "/developer/vapi/create_call",
+        url: "/testing/vapi/create_call",
         method: "POST",
         body: data,
       }),
@@ -20,7 +20,7 @@ export const callApi = api.injectEndpoints({
     }),
     syncDataWithVapi: build.mutation({
       query: (data: { customer_number: string; business_id: string }) => ({
-        url: `/developer/business/sync/${data.business_id}`,
+        url: `/testing/business/sync/${data.business_id}`,
         method: "PATCH",
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -36,14 +36,14 @@ export const callApi = api.injectEndpoints({
     }),
     getCallDetails: build.query({
       query: (vapi_call_id: string) => ({
-        url: `/business/vapi_call_logs/call-details/${vapi_call_id}`,
+        url: `/testing/vapi_call_logs/call-details/${vapi_call_id}`,
         method: "GET",
       }),
       transformResponse: (response: SingleCallData) => response,
     }),
     deleteCall: build.mutation({
       query: (call_logs_id: string) => ({
-        url: `/business/vapi_call_logs/${call_logs_id}`,
+        url: `/testing/vapi_call_logs/${call_logs_id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Calls"],

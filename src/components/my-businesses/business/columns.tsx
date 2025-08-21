@@ -1,7 +1,14 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { ArrowSwapVertical } from "iconsax-react";
-
+import dayjs from "dayjs";
+import { ArrowRight, ArrowSwapVertical, Briefcase, More } from "iconsax-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const columns: ColumnDef<Business>[] = [
   {
@@ -37,20 +44,57 @@ export const columns: ColumnDef<Business>[] = [
       return <span>{value ?? "N/A"}</span>;
     },
   },
-  // {
-  //   accessorKey: "twilio",
-  //   header: "Twilio Number",
-  //   cell: ({ row }) => {
-  //     const value = row.getValue<string | null>("twilio");
-  //     return <span>{value ?? "N/A"}</span>;
-  //   },
-  // },
   {
-    accessorKey: "country",
-    header: "Country",
+    accessorKey: "twilio",
+    header: "Twilio Number",
     cell: ({ row }) => {
-      const value = row.getValue<string | null>("country");
+      const value = row.getValue<string | null>("twilio");
       return <span>{value ?? "N/A"}</span>;
     },
+  },
+  {
+    accessorKey: "created_at",
+    header: "Start Date",
+    cell: ({ row }) => {
+      const value = row.getValue<string | null>("created_at");
+      return <span>{dayjs(value).format("DD MMM YYYY") ?? "N/A"}</span>;
+    },
+  },
+  {
+    accessorKey: "updated_at",
+    header: "Completion Date",
+    cell: ({ row }) => {
+      const value = row.getValue<string | null>("updated_at");
+      return <span>{dayjs(value).format("DD MMM YYYY") ?? "N/A"}</span>;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <More size={16} color="#71717A" className="rotate-90 fill-[#71717A]" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>
+            <Link
+              to={`/my-agents/${row.original.id}/${row.original.assistant_id}`}
+              className="flex w-full items-center justify-center gap-2.5"
+            >
+              <Briefcase color="#000000" size={12} />
+              <span className="flex-1 text-left font-medium text-black text-sm">View Agent</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <div className="flex w-full items-center justify-center gap-2.5">
+              <ArrowRight color="#000000" size={12} />
+              <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
+            </div>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
   },
 ];

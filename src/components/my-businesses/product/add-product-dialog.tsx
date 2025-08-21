@@ -63,7 +63,7 @@ const AddProductDialog = ({ id, open, setOpen }: AddProductDialogProps) => {
           price: values.price,
           product_name: values.product_name,
           product_type: values.product_type,
-          quantity: values.quantity,
+          quantity: `${values.quantity}`,
           product_description: values.product_description,
           technical_specification: values.technical_specification,
         },
@@ -77,7 +77,7 @@ const AddProductDialog = ({ id, open, setOpen }: AddProductDialogProps) => {
           product_description: "",
           product_name: values.product_name,
           product_type: values.product_type,
-          quantity: values.quantity,
+          quantity: `${values.quantity}`,
           technical_specification: "",
         },
       });

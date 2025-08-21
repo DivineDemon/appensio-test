@@ -84,7 +84,7 @@ declare type PostProduct = {
   product_type: string;
   technical_specification: string;
   product_description: string;
-  quantity: number;
+  quantity: string;
   price: string;
 };
 
@@ -269,6 +269,8 @@ declare type Business = {
   website: string;
   country: string;
   assistant_id: string;
+  created_at: string;
+  updated_at: string;
 };
 
 declare type PromptTemplate = {
@@ -374,4 +376,46 @@ declare type PackageStats = {
   plan_limit_minutes: number;
   total_minutes_used: number;
   exceed_minutes: number;
+};
+
+declare type BusinessDetails = {
+  business_id: string;
+  business_name: string;
+  contact_number: string;
+  website: string | null;
+  country: string;
+  language: string;
+  industry_type: string;
+  communication_type: string;
+  number_type: string;
+  voice_provider: string;
+  voice: string;
+  ai_model_provider: string;
+  ai_model: string;
+  transcriber_provider: string;
+  transcriber_language: string;
+  system_prompt: string;
+  first_message: string;
+  last_message: string;
+  twilio: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+};
+
+declare type UpdateBusinessBody = {
+  business_name: string;
+  industry: string;
+  contact_number: string;
+  country: string;
+  language: string;
+  communication_type: string;
+  ai_model_name: string;
+  system_message: string;
+  voice_agent_provider: string;
+  voice_agent: string;
+  transcriber_language: string;
+  edit_privilege: boolean;
+  first_message: string;
+  last_message: string;
 };
