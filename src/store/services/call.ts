@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { api } from "./core";
 
 export const callApi = api.injectEndpoints({
@@ -25,13 +26,20 @@ export const callApi = api.injectEndpoints({
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await queryFulfilled;
-
-        await dispatch(
+        const result = await dispatch(
           callApi.endpoints.createCall.initiate({
             customer_number: arg.customer_number,
             bussiness_id: arg.business_id,
           }),
         );
+
+        if (result.error) {
+          if ("data" in result.error) {
+            toast.error((result.error as { data?: { detail?: string } }).data?.detail);
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        }
       },
     }),
     getCallDetails: build.query({

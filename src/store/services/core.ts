@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { toast } from "sonner";
-
 import { type RootState } from "..";
 
 const baseQuery = fetchBaseQuery({
@@ -17,7 +16,7 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWith401Handling: typeof baseQuery = async (args, api, extraOptions) => {
   const result = await baseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 401 || result.error?.status === 403) {
+  if (result.error?.status === 401) {
     localStorage.clear();
     window.location.replace("/");
     toast.error("Session Expired! Please Login Again.");

@@ -11,7 +11,6 @@ import { useGetProductQuery, usePostProductMutation, useUpdateProductMutation } 
 import { Button } from "../../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 import { Input } from "../../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../../ui/sheet";
 import { Textarea } from "../../ui/textarea";
 
@@ -135,20 +134,9 @@ const AddProductDialog = ({ id, open, setOpen }: AddProductDialogProps) => {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Product Type</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl className="w-full">
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a Product Type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {["Healthcare", "Food", "Electronics", "Real Estate"].map((item, idx) => (
-                          <SelectItem key={idx} value={item}>
-                            {item}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <Input type="text" placeholder="Enter Product Type" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

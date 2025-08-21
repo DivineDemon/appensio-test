@@ -21,8 +21,7 @@ const KnowledgeBase = () => {
     <>
       <AddDocumentDialog open={open} setOpen={setOpen} />
       <div className="mt-5 flex h-[calc(100vh-172px)] w-full flex-col items-start justify-start gap-5 overflow-y-auto md:gap-5">
-        <div className="flex w-full items-center justify-center">
-          <span className="flex-1 text-left text-[#71717A] text-sm">List of Documents</span>
+        <div className="flex w-full items-center justify-end">
           <Button type="button" onClick={() => setOpen(true)} variant="default" size="sm">
             + Add Document&nbsp;
             <DocumentText size={20} color="#0B33A4" className="fill-white text-primary" />

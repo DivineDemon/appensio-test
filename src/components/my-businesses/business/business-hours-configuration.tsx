@@ -111,7 +111,7 @@ const BusinessHoursConfiguration = () => {
 
   useEffect(() => {
     if (data) {
-      form.setValue("operatingDays", data.status === "temporarily_closed" ? false : true);
+      form.setValue("operatingDays", data.business_status);
       form.setValue(
         "days",
         data.data.map((day) => ({
