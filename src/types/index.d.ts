@@ -28,6 +28,8 @@ declare type PostLogin = {
   role: string;
   email: string;
   password: string;
+  secondary_email: string;
+  secondary_password: string;
 };
 
 declare type PostLoginResponse = {
@@ -272,6 +274,7 @@ declare type Business = {
   assistant_id: string;
   created_at: string;
   updated_at: string;
+  dev_agent_status: string;
 };
 
 declare type PromptTemplate = {

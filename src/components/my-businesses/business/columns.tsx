@@ -55,9 +55,8 @@ export const columns: ColumnDef<Business>[] = [
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "dev_agent_status",
     header: "Agent Status",
-    cell: () => <span>Agent Created</span>,
   },
   {
     accessorKey: "created_at",
