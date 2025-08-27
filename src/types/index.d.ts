@@ -25,6 +25,7 @@ declare type GlobalState = {
 };
 
 declare type PostLogin = {
+  role: string;
   email: string;
   password: string;
 };

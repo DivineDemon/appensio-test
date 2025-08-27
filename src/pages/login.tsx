@@ -25,6 +25,7 @@ const Login = () => {
     const response = await login({
       email,
       password,
+      role: "test",
     });
 
     if (response.data) {
