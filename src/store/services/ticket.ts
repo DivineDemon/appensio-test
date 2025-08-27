@@ -24,6 +24,7 @@ export const ticketApi = api.injectEndpoints({
         method: "POST",
         body: {
           problem,
+          source_panel: "TESTING",
         },
       }),
       invalidatesTags: ["Tickets"],
