@@ -116,6 +116,13 @@ export const businessApi = api.injectEndpoints({
       },
       invalidatesTags: ["Business"],
     }),
+    moveToBusiness: build.mutation({
+      query: (business_id: string) => ({
+        url: `/auth/swap-secondary/${business_id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Business"],
+    }),
   }),
 });
 
@@ -126,6 +133,7 @@ export const {
   useGetBusinessStatsQuery,
   useGetBusinessUsageQuery,
   useUpdateBusinessMutation,
+  useMoveToBusinessMutation,
   useGetPromptTemplatesQuery,
   usePostBusinessHoursMutation,
   useUpdateBusinessVapiMutation,

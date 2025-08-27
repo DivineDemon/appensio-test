@@ -17,6 +17,11 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
+    if (email !== "testagent@scintia.ai") {
+      toast.error("Please use the Testing Account to Login!");
+      return;
+    }
+
     const response = await login({
       email,
       password,

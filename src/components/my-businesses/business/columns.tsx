@@ -1,7 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { ArrowRight, ArrowSwapVertical, Briefcase, More } from "iconsax-react";
+import { ArrowRight, ArrowSwapVertical, Briefcase, ChartCircle, More } from "iconsax-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useMoveToBusinessMutation } from "@/store/services/business";
 
 export const columns: ColumnDef<Business>[] = [
   {
@@ -75,31 +77,49 @@ export const columns: ColumnDef<Business>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <More size={16} color="#71717A" className="rotate-90 fill-[#71717A]" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>
-            <Link
-              to={`/my-agents/${row.original.id}/${row.original.assistant_id}`}
-              className="flex w-full items-center justify-center gap-2.5"
-            >
-              <Briefcase color="#000000" size={12} />
-              <span className="flex-1 text-left font-medium text-black text-sm">View Agent</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <div className="flex w-full items-center justify-center gap-2.5">
-              <ArrowRight color="#000000" size={12} />
-              <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
-            </div>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    cell: ({ row }) => {
+      const [move, { isLoading }] = useMoveToBusinessMutation();
+
+      const handleMove = async () => {
+        const response = await move(row.original.id);
+
+        if (response.data) {
+          toast.success("Switched Business Successfully!");
+        } else {
+          toast.error("Failed to Switch Business!");
+        }
+      };
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              {isLoading ? (
+                <ChartCircle size={16} color="#0B33A4" className="animate-spin" />
+              ) : (
+                <More size={16} color="#71717A" className="rotate-90 fill-[#71717A]" />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              <Link
+                to={`/my-agents/${row.original.id}/${row.original.assistant_id}`}
+                className="flex w-full items-center justify-center gap-2.5"
+              >
+                <Briefcase color="#000000" size={12} />
+                <span className="flex-1 text-left font-medium text-black text-sm">View Agent</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div onClick={handleMove} className="flex w-full items-center justify-center gap-2.5">
+                <ArrowRight color="#000000" size={12} />
+                <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
