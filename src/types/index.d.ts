@@ -28,8 +28,6 @@ declare type PostLogin = {
   role: string;
   email: string;
   password: string;
-  secondary_email: string;
-  secondary_password: string;
 };
 
 declare type PostLoginResponse = {

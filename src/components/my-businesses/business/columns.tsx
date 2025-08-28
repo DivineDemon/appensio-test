@@ -1,6 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { ArrowRight, ArrowSwapVertical, Briefcase, ChartCircle, More } from "iconsax-react";
+import { ArrowDown2, ArrowRight, ArrowSwapVertical, Briefcase, ChartCircle, More } from "iconsax-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { useMoveToBusinessMutation } from "@/store/services/business";
 
 export const columns: ColumnDef<Business>[] = [
@@ -56,7 +58,67 @@ export const columns: ColumnDef<Business>[] = [
   },
   {
     accessorKey: "dev_agent_status",
-    header: "Agent Status",
+    header: ({ column }) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" type="button">
+            Status
+            <ArrowDown2 size={16} color="#71717A" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {[
+            { value: "AGENT_CREATED", label: "Agent Created" },
+            { value: "TESTING_IN_PROGRESS", label: "Testing in Progress" },
+            { value: "READY_FOR_TESTING", label: "Ready for Testing" },
+            { value: "DONE", label: "Move to Business" },
+          ].map(({ value, label }) => (
+            <DropdownMenuItem
+              key={value}
+              onSelect={() => column.setFilterValue(value)}
+              className={column.getFilterValue() === value ? "font-semibold" : ""}
+            >
+              {label}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onSelect={() => column.setFilterValue(undefined)} className="text-red-500">
+            Clear Filter
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
+    cell: ({ row }) => {
+      const raw = row.getValue<string>("dev_agent_status");
+
+      return (
+        <div
+          className={cn(
+            "w-fit rounded-md border px-4 py-1.5 text-center font-medium text-[14px] text-muted-foreground capitalize leading-[14px]",
+            {
+              "border-red-500": raw === "AGENT_CREATED",
+              "border-yellow-500": raw === "TESTING_IN_PROGRESS",
+              "border-blue-500": raw === "READY_FOR_TESTING",
+              "border-green-500": raw === "DONE",
+            },
+          )}
+        >
+          {raw === "AGENT_CREATED"
+            ? "Agent Created"
+            : raw === "TESTING_IN_PROGRESS"
+              ? "Testing in Progress"
+              : raw === "READY_FOR_TESTING"
+                ? "Ready for Testing"
+                : raw === "DONE"
+                  ? "Move to Business"
+                  : "N/A"}
+        </div>
+      );
+    },
+    enableColumnFilter: true,
+    meta: {
+      filterFn: "equals",
+    },
   },
   {
     accessorKey: "created_at",

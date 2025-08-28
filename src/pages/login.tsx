@@ -17,17 +17,15 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    if (email !== "aliabbas3909@gmail.com") {
+    if (email !== "digimark.dev1@gmail.com") {
       toast.error("Please use the Testing Account to Login!");
       return;
     }
 
     const response = await login({
+      email,
+      password,
       role: "test",
-      password: "string",
-      secondary_email: email,
-      secondary_password: password,
-      email: "aliabbas18012@gmail.com",
     });
 
     if (response.data) {
