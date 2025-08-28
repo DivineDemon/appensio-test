@@ -118,8 +118,13 @@ export const businessApi = api.injectEndpoints({
     }),
     moveToBusiness: build.mutation({
       query: (business_id: string) => ({
-        url: `/auth/swap-secondary/${business_id}`,
+        url: `/business/email-template/${business_id}`,
         method: "PUT",
+        body: {
+          business_id,
+          source_panel: "TESTING",
+          dev_agent_status: "DONE",
+        },
       }),
       invalidatesTags: ["Business"],
     }),
