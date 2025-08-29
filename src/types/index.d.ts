@@ -273,6 +273,7 @@ declare type Business = {
   created_at: string;
   updated_at: string;
   dev_agent_status: string;
+  owner_email: string;
 };
 
 declare type PromptTemplate = {

@@ -128,6 +128,19 @@ export const businessApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Businesses"],
     }),
+    moveToBusiness: build.mutation({
+      query: ({ business_id, owner_email }: { business_id: string; owner_email: string }) => ({
+        url: `/business/move/move_to_business/${business_id}`,
+        method: "POST",
+        body: {
+          business_id,
+          owner_email,
+          dev_agent_status: "DONE",
+          source_panel: "BUSINESS",
+        },
+      }),
+      invalidatesTags: ["Businesses"],
+    }),
   }),
 });
 
@@ -139,6 +152,7 @@ export const {
   useGetBusinessStatsQuery,
   useGetBusinessUsageQuery,
   useUpdateBusinessMutation,
+  useMoveToBusinessMutation,
   useGetPromptTemplatesQuery,
   usePostBusinessHoursMutation,
   useUpdateBusinessVapiMutation,

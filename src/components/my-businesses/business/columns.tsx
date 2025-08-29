@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useStartTestingMutation } from "@/store/services/business";
+import { useMoveToBusinessMutation, useStartTestingMutation } from "@/store/services/business";
 
 export const columns: ColumnDef<Business>[] = [
   {
@@ -68,10 +68,8 @@ export const columns: ColumnDef<Business>[] = [
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {[
-            { value: "AGENT_CREATED", label: "Agent Created" },
             { value: "TESTING_IN_PROGRESS", label: "Testing in Progress" },
             { value: "READY_FOR_TESTING", label: "Ready for Testing" },
-            { value: "DONE", label: "Move to Business" },
           ].map(({ value, label }) => (
             <DropdownMenuItem
               key={value}
@@ -141,6 +139,7 @@ export const columns: ColumnDef<Business>[] = [
     cell: ({ row }) => {
       const navigate = useNavigate();
       const [move, { isLoading }] = useStartTestingMutation();
+      const [done, { isLoading: isCompleting }] = useMoveToBusinessMutation();
 
       const handleMove = async () => {
         const response = await move(row.original.id);
@@ -152,11 +151,29 @@ export const columns: ColumnDef<Business>[] = [
         }
       };
 
+      const handleComplete = async () => {
+        if (row.original.dev_agent_status !== "TESTING_IN_PROGRESS") {
+          toast.error("Agent Testing must be in Progress to move to Business.");
+          return;
+        }
+
+        const response = await done({
+          business_id: row.original.id,
+          owner_email: row.original.owner_email,
+        });
+
+        if (response.data) {
+          toast.success("Testing Completed Successfully!");
+        } else {
+          toast.error("Failed to Completed Testing!");
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              {isLoading ? (
+              {isLoading || isCompleting ? (
                 <ChartCircle size={16} color="#0B33A4" className="animate-spin" />
               ) : (
                 <More size={16} color="#71717A" className="rotate-90 fill-[#71717A]" />
@@ -187,7 +204,7 @@ export const columns: ColumnDef<Business>[] = [
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <div className="flex w-full items-center justify-center gap-2.5">
+              <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
                 <ArrowRight color="#000000" size={12} />
                 <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
               </div>
