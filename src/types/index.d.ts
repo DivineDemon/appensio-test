@@ -354,16 +354,22 @@ declare type Ticket = {
 };
 
 declare type GetTicket = {
-  ticket_status: string;
-  business_industry: string;
+  ticket_id: string;
+  business_id: string;
   business_name: string;
+  industry: string;
+  country: string;
+  status: string;
+  is_read: boolean;
   problem: string;
   comments: {
     type: string;
-    message: string;
     created_at: string;
+    message: string;
   }[];
   created_at: string;
+  updated_at: string;
+  source_panel: string;
 };
 
 declare type HealthCheck = {

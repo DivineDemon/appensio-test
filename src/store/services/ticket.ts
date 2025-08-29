@@ -4,7 +4,7 @@ export const ticketApi = api.injectEndpoints({
   endpoints: (build) => ({
     getTickets: build.query({
       query: () => ({
-        url: "/testing/support-ticket/",
+        url: "/testing/support-tickets/",
         method: "GET",
       }),
       providesTags: ["Tickets"],
@@ -12,7 +12,7 @@ export const ticketApi = api.injectEndpoints({
     }),
     getTicket: build.query({
       query: (ticket_id: string) => ({
-        url: `/testing/support-ticket/ticket/${ticket_id}`,
+        url: `/testing/support-tickets/${ticket_id}`,
         method: "GET",
       }),
       providesTags: ["Ticket"],
@@ -20,7 +20,7 @@ export const ticketApi = api.injectEndpoints({
     }),
     postTicket: build.mutation({
       query: ({ business_id, problem }: { business_id: string; problem: string }) => ({
-        url: `/testing/support-ticket/${business_id}`,
+        url: `/testing/support-tickets/${business_id}`,
         method: "POST",
         body: {
           problem,
@@ -31,14 +31,14 @@ export const ticketApi = api.injectEndpoints({
     }),
     deleteTicket: build.mutation({
       query: (ticket_id: string) => ({
-        url: `/testing/support-ticket/${ticket_id}`,
+        url: `/testing/support-tickets/${ticket_id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Tickets"],
     }),
     postComment: build.mutation({
       query: ({ ticket_id, body }: { ticket_id: string; body: { message: string; status: string } }) => ({
-        url: `/testing/support-ticket/${ticket_id}/comment`,
+        url: `/testing/support-tickets/${ticket_id}/comment`,
         method: "POST",
         body,
       }),

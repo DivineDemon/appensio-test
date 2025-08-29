@@ -25,7 +25,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 const DataTable = <TData, TValue>({ columns, data, type }: DataTableProps<TData, TValue>) => {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -66,21 +66,7 @@ const DataTable = <TData, TValue>({ columns, data, type }: DataTableProps<TData,
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                className="h-14"
-                onClick={() => {
-                  if (type === "agents") {
-                    void navigate(
-                      // @ts-expect-error Type Mismatch
-                      `/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`,
-                    );
-                  }
-                }}
-                data-state={row.getIsSelected() && "selected"}
-                // @ts-expect-error Type Mismatch
-                title={`/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`}
-              >
+              <TableRow key={row.id} className="h-14" data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}

@@ -116,17 +116,17 @@ export const businessApi = api.injectEndpoints({
       },
       invalidatesTags: ["Business"],
     }),
-    moveToBusiness: build.mutation({
+    startTesting: build.mutation({
       query: (business_id: string) => ({
-        url: `/business/email-template/${business_id}`,
+        url: `/business/move/${business_id}`,
         method: "PUT",
         body: {
           business_id,
           source_panel: "TESTING",
-          dev_agent_status: "DONE",
+          dev_agent_status: "TESTING_IN_PROGRESS",
         },
       }),
-      invalidatesTags: ["Business"],
+      invalidatesTags: ["Businesses"],
     }),
   }),
 });
@@ -134,11 +134,11 @@ export const businessApi = api.injectEndpoints({
 export const {
   useGetBusinessQuery,
   useGetMyBusinessesQuery,
+  useStartTestingMutation,
   useGetBusinessHoursQuery,
   useGetBusinessStatsQuery,
   useGetBusinessUsageQuery,
   useUpdateBusinessMutation,
-  useMoveToBusinessMutation,
   useGetPromptTemplatesQuery,
   usePostBusinessHoursMutation,
   useUpdateBusinessVapiMutation,

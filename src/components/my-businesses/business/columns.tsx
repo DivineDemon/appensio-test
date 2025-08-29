@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { ArrowDown2, ArrowRight, ArrowSwapVertical, Briefcase, ChartCircle, More } from "iconsax-react";
-import { Link } from "react-router-dom";
+import { ArrowDown2, ArrowRight, ArrowSwapVertical, Box2, Briefcase, ChartCircle, More } from "iconsax-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useMoveToBusinessMutation } from "@/store/services/business";
+import { useStartTestingMutation } from "@/store/services/business";
 
 export const columns: ColumnDef<Business>[] = [
   {
@@ -139,15 +139,16 @@ export const columns: ColumnDef<Business>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const [move, { isLoading }] = useMoveToBusinessMutation();
+      const navigate = useNavigate();
+      const [move, { isLoading }] = useStartTestingMutation();
 
       const handleMove = async () => {
         const response = await move(row.original.id);
 
         if (response.data) {
-          toast.success("Switched Business Successfully!");
+          toast.success("Started Testing Successfully!");
         } else {
-          toast.error("Failed to Switch Business!");
+          toast.error("Failed to Start Testing!");
         }
       };
 
@@ -164,16 +165,29 @@ export const columns: ColumnDef<Business>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
-              <Link
-                to={`/my-agents/${row.original.id}/${row.original.assistant_id}`}
+              <div
+                onClick={() => {
+                  if (row.original.dev_agent_status === "READY_FOR_TESTING") {
+                    toast.error("Please Start Testing to View the Agent.");
+                    return;
+                  } else {
+                    navigate(`/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`);
+                  }
+                }}
                 className="flex w-full items-center justify-center gap-2.5"
               >
                 <Briefcase color="#000000" size={12} />
                 <span className="flex-1 text-left font-medium text-black text-sm">View Agent</span>
-              </Link>
+              </div>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <div onClick={handleMove} className="flex w-full items-center justify-center gap-2.5">
+                <Box2 color="#000000" size={12} />
+                <span className="flex-1 text-left font-medium text-black text-sm">Start Testing</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div className="flex w-full items-center justify-center gap-2.5">
                 <ArrowRight color="#000000" size={12} />
                 <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
               </div>

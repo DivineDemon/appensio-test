@@ -61,7 +61,7 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
 
   useEffect(() => {
     if (data) {
-      form.setValue("status", data.ticket_status as "open" | "in progress" | "resolved");
+      form.setValue("status", data.status as "open" | "in progress" | "resolved");
     }
   }, [data, form.setValue]);
 
@@ -80,18 +80,18 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
               <span className="text-[#71717A] text-sm">Status:</span>
               <div
                 className={cn("w-full rounded-md border-2 p-1.5 text-center font-medium text-sm capitalize", {
-                  "border-red-500 text-red-500": data?.ticket_status === "open",
-                  "border-green-500 text-green-500": data?.ticket_status === "resolved",
-                  "border-yellow-500 text-yellow-500": data?.ticket_status === "in progress",
+                  "border-red-500 text-red-500": data?.status === "open",
+                  "border-green-500 text-green-500": data?.status === "resolved",
+                  "border-yellow-500 text-yellow-500": data?.status === "in progress",
                 })}
               >
-                {data?.ticket_status}
+                {data?.status}
               </div>
             </div>
           </div>
           <div className="grid w-full grid-cols-2 items-center justify-center gap-5 p-5">
             <span className="flex-1 text-left text-[#71717A] text-sm">Business Type/Industry:</span>
-            <span className="flex-1 text-right font-semibold">{data?.business_industry}</span>
+            <span className="flex-1 text-right font-semibold">{data?.industry}</span>
           </div>
           <div className="grid w-full grid-cols-2 items-center justify-center gap-5 p-5">
             <div className="col-span-2 flex w-full flex-col items-center justify-center gap-2.5">
@@ -102,7 +102,7 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
           <div className="flex h-full w-full flex-col items-start justify-start">
             <div className="col-span-2 flex w-full flex-col items-center justify-center gap-2.5 p-5">
               <span className="w-full text-left font-bold text-lg">Resolution</span>
-              <div className="flex h-[calc(100vh-495px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
+              <div className="flex h-[calc(100vh-475px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
                 {data?.comments.map((item, idx) => {
                   const isDeveloper = item.type === "developer";
                   return (
@@ -138,7 +138,11 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
                               isDeveloper ? "text-left" : "text-right",
                             )}
                           >
-                            {item.type === "developer" ? "Scintia Support" : data?.business_name}
+                            {item.type === "developer"
+                              ? "Scintia Support"
+                              : item.type === "testing"
+                                ? "Testing Support"
+                                : data?.business_name}
                           </span>
                           <span
                             className={cn(
@@ -153,12 +157,12 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
                           className={cn("w-full font-medium text-[14px] text-gray-400 leading-[14px]", {
                             "text-left": isDeveloper,
                             "text-right": !isDeveloper,
-                            "text-green-500 italic": !item.message && data?.ticket_status === "resolved",
-                            "text-yellow-500 italic": !item.message && data?.ticket_status === "in progress",
-                            "text-red-500 italic": !item.message && data?.ticket_status === "open",
+                            "text-green-500 italic": !item.message && data?.status === "resolved",
+                            "text-yellow-500 italic": !item.message && data?.status === "in progress",
+                            "text-red-500 italic": !item.message && data?.status === "open",
                           })}
                         >
-                          {item.message ? item.message : data?.ticket_status}
+                          {item.message ? item.message : data?.status}
                         </span>
                       </div>
                     </div>
