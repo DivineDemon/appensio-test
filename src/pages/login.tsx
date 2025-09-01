@@ -15,15 +15,12 @@ const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [login, { isLoading }] = useLoginMutation();
   const [password, setPassword] = useState<string>("");
-  const allowedEmails = ["digimark.dev1@gmail.com", "testagent@scintia.ai"];
 
   const handleLogin = async () => {
-    // if (email !== "digimark.dev1@gmail.com") {
-    //   toast.error("Please use the Testing Account to Login!");
-    //   return;
-    // }
-
-    if (!allowedEmails.includes(email)) {
+    if (
+      email !== "digimark.dev1@gmail.com" &&
+      email !== "testagent@scintia.ai"
+    ) {
       toast.error("Please use the Testing Account to Login!");
       return;
     }
