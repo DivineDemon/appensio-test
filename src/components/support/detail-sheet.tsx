@@ -102,7 +102,7 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
           <div className="flex h-full w-full flex-col items-start justify-start">
             <div className="col-span-2 flex w-full flex-col items-center justify-center gap-2.5 p-5">
               <span className="w-full text-left font-bold text-lg">Resolution</span>
-              <div className="flex h-[calc(100vh-475px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
+              <div className="flex h-[calc(100vh-495px)] w-full flex-col items-start justify-start gap-2.5 overflow-y-auto">
                 {data?.comments.map((item, idx) => {
                   const isDeveloper = item.type === "developer";
                   return (
@@ -170,8 +170,8 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
                 })}
               </div>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full">
-                  <div className="flex w-full items-start justify-start gap-2.5">
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full ">
+                  <div className="flex w-full items-start justify-start gap-2.5 pb-10">
                     <FormField
                       control={form.control}
                       name="message"

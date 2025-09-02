@@ -25,7 +25,7 @@ export const businessApi = api.injectEndpoints({
     }),
     getMyBusinesses: build.query({
       query: () => ({
-        url: "/testing/business/atif_agent_status",
+        url: "/testing/business/testing_agent_status",
         method: "GET",
       }),
       providesTags: ["Businesses"],
