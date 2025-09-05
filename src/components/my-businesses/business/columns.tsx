@@ -158,6 +158,7 @@ export const columns: ColumnDef<Business>[] = [
         }
 
         const response = await done({
+          status: "DONE",
           business_id: row.original.id,
           owner_email: row.original.owner_email,
         });
@@ -166,6 +167,25 @@ export const columns: ColumnDef<Business>[] = [
           toast.success("Testing Completed Successfully!");
         } else {
           toast.error("Failed to Completed Testing!");
+        }
+      };
+
+      const handleRevision = async () => {
+        if (row.original.dev_agent_status !== "TESTING_IN_PROGRESS") {
+          toast.error("Agent Testing must be in Progress to request revision.");
+          return;
+        }
+
+        const response = await done({
+          status: "REVISION_REQUEST",
+          business_id: row.original.id,
+          owner_email: row.original.owner_email,
+        });
+
+        if (response.data) {
+          toast.success("Requested Revision Successfully!");
+        } else {
+          toast.error("Failed to Request Revision!");
         }
       };
 
@@ -207,6 +227,12 @@ export const columns: ColumnDef<Business>[] = [
               <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
                 <ArrowRight color="#000000" size={12} />
                 <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div onClick={handleRevision} className="flex w-full items-center justify-center gap-2.5">
+                <ArrowRight color="#000000" size={12} />
+                <span className="flex-1 text-left font-medium text-black text-sm">Request Revision</span>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
