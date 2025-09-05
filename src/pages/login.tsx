@@ -17,10 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
 
   const handleLogin = async () => {
-    if (
-      email !== "digimark.dev1@gmail.com" &&
-      email !== "testagent@scintia.ai"
-    ) {
+    if (email !== "digimark.dev1@gmail.com" && email !== "testagent@scintia.ai") {
       toast.error("Please use the Testing Account to Login!");
       return;
     }
@@ -76,18 +73,8 @@ const Login = () => {
       >
         Forgot Password?
       </Link>
-      <Button
-        disabled={isLoading}
-        className="mb-10 w-full"
-        variant="default"
-        size="lg"
-        type="submit"
-      >
-        {isLoading ? (
-          <ChartCircle size={20} color="#FFFFFF" className="animate-spin" />
-        ) : (
-          "Sign In with Email"
-        )}
+      <Button disabled={isLoading} className="mb-10 w-full" variant="default" size="lg" type="submit">
+        {isLoading ? <ChartCircle size={20} color="#FFFFFF" className="animate-spin" /> : "Sign In with Email"}
       </Button>
       <span className="mt-2.5 mb-10 w-full text-center font-medium text-[#71717A] text-[12px] leading-[16px]">
         By clicking continue, you agree to our&nbsp;

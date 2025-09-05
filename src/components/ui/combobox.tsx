@@ -19,8 +19,6 @@ interface ComboboxProps {
 
 export function Combobox({ data, width, value, setValue, placeholder }: ComboboxProps) {
   const [open, setOpen] = useState(false);
-
-  // Create a mapping of labels to values for selection handling
   const labelToValueMap = Object.fromEntries(data.map((item) => [item.label, item.value]));
 
   const selectedItem = data.find((item) => item.value === value);
@@ -46,10 +44,8 @@ export function Combobox({ data, width, value, setValue, placeholder }: Combobox
               {data.map((item) => (
                 <CommandItem
                   key={item.value}
-                  // Use label for filtering and display
                   value={item.label}
                   onSelect={(selectedLabel) => {
-                    // Convert selected label back to value
                     const selectedValue = labelToValueMap[selectedLabel];
                     setValue(selectedValue === value ? "" : selectedValue);
                     setOpen(false);
