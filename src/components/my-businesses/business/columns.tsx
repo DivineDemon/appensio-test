@@ -182,7 +182,7 @@ export const columns: ColumnDef<Business>[] = [
         }
 
         const response = await done({
-          status: "DONE",
+          status: "DONE", 
           business_id: row.original.id,
           owner_email: row.original.owner_email,
         });
