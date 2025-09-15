@@ -14,6 +14,7 @@ const initialState: GlobalState = {
   newPassword: "",
   end_date: new Date("2025-06-17"),
   start_date: new Date("2025-06-16"),
+  selectedTicket: "",
 };
 
 const globalSlice = createSlice({
@@ -44,6 +45,9 @@ const globalSlice = createSlice({
     setStartDate: (state, action) => {
       state.start_date = action.payload as Date;
     },
+    setSelectedTicket: (state, action) => {
+      state.selectedTicket = action.payload as string;
+    },
   },
 });
 
@@ -56,5 +60,6 @@ export const {
   setTwilioNumber,
   setEndDate,
   setStartDate,
+  setSelectedTicket,
 } = globalSlice.actions;
 export default globalSlice.reducer;

@@ -44,6 +44,20 @@ export const ticketApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Ticket", "Tickets"],
     }),
+    getUnreadComments: build.query({
+      query: () => ({
+        url: "/business/support-ticket/unread-comments",
+        method: "GET",
+      }),
+      transformResponse: (response: UnreadComments[]) => response,
+    }),
+    getreadcomment: build.query({
+      query: (ticket_id: string) => ({
+        url: `/business/support-ticket/tickets/${ticket_id}`,
+        method: "GET",
+      }),
+      transformResponse: (response: UnreadComments[]) => response,
+    }),
   }),
 });
 
@@ -53,4 +67,6 @@ export const {
   usePostTicketMutation,
   useDeleteTicketMutation,
   usePostCommentMutation,
+  useGetUnreadCommentsQuery,
+  useGetreadcommentQuery,
 } = ticketApi;

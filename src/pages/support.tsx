@@ -1,15 +1,23 @@
 import { ChartCircle, Messages } from "iconsax-react";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import DataTable from "@/components/data-table";
 import AddTicket from "@/components/support/add-ticket-sheet";
+import DetailSheet from "@/components/support/detail-sheet";
 import { columns } from "@/components/support/ticket-columns";
 import { Button } from "@/components/ui/button";
+import { RootState } from "@/store";
 import { useGetTicketsQuery } from "@/store/services/ticket";
 
 const Support = () => {
+  const [open, setOpen] = useState(false);
   const [add, setAdd] = useState<boolean>(false);
   const { data, isLoading } = useGetTicketsQuery({});
+  const { selectedTicket } = useSelector((state: RootState) => state.global);
+
+  useEffect(() => {
+    setOpen(!!selectedTicket);
+  }, [selectedTicket]);
 
   return (
     <>
@@ -18,7 +26,12 @@ const Support = () => {
           <span className="flex-1 text-left font-bold text-[32px] leading-[32px] md:text-[36px] md:leading-[36px]">
             Tickets
           </span>
-          <Button onClick={() => setAdd(true)} variant="default" size="sm" type="button">
+          <Button
+            onClick={() => setAdd(true)}
+            variant="default"
+            size="sm"
+            type="button"
+          >
             Report Issue&nbsp;
             <Messages size={20} color="#0B33A4" className="fill-white" />
           </Button>
@@ -34,6 +47,15 @@ const Support = () => {
         )}
       </div>
       <AddTicket open={add} setOpen={setAdd} />
+      {/* <DetailSheet
+        id={selectedTicket}
+        open={!!selectedTicket}
+      /> */}
+      <DetailSheet
+        id={selectedTicket ?? undefined}
+        open={open}
+        setOpen={setOpen}
+      />
     </>
   );
 };

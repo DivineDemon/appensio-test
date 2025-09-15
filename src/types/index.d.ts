@@ -22,6 +22,7 @@ declare type GlobalState = {
   newPassword: string;
   end_date: Date;
   start_date: Date;
+  selectedTicket: string;
 };
 
 declare type PostLogin = {
@@ -352,6 +353,16 @@ declare type Ticket = {
   status: string;
   problem: string;
   created_at: string;
+};
+
+declare type UnreadComments = {
+  type: string;
+  created_at: string;
+  message: string;
+  ticket_id: string;
+  is_read_comment: boolean;
+  business_name: string;
+  dev_agent_status: string;
 };
 
 declare type GetTicket = {
