@@ -1,14 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import {
-  ArrowDown2,
-  ArrowRight,
-  ArrowSwapVertical,
-  Box2,
-  Briefcase,
-  ChartCircle,
-  More,
-} from "iconsax-react";
+import { ArrowDown2, ArrowRight, ArrowSwapVertical, Box2, Briefcase, ChartCircle, More } from "iconsax-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -20,20 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import {
-  useMoveToBusinessMutation,
-  useStartTestingMutation,
-} from "@/store/services/business";
+import { useMoveToBusinessMutation, useStartTestingMutation } from "@/store/services/business";
 
 export const columns: ColumnDef<Business>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <Button
-        type="button"
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
+      <Button type="button" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
         Agent Name
         <ArrowSwapVertical size={16} color="#71717A" className="ml-2" />
       </Button>
@@ -90,18 +75,13 @@ export const columns: ColumnDef<Business>[] = [
             <DropdownMenuItem
               key={value}
               onSelect={() => column.setFilterValue(value)}
-              className={
-                column.getFilterValue() === value ? "font-semibold" : ""
-              }
+              className={column.getFilterValue() === value ? "font-semibold" : ""}
             >
               {label}
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onSelect={() => column.setFilterValue(undefined)}
-            className="text-red-500"
-          >
+          <DropdownMenuItem onSelect={() => column.setFilterValue(undefined)} className="text-red-500">
             Clear Filter
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -120,20 +100,20 @@ export const columns: ColumnDef<Business>[] = [
               "border-blue-500": raw === "READY_FOR_TESTING",
               "border-purple-500": raw === "REVISION_REQUEST",
               "border-green-500": raw === "DONE",
-            }
+            },
           )}
         >
           {raw === "AGENT_CREATED"
             ? "Agent Created"
             : raw === "TESTING_IN_PROGRESS"
-            ? "Testing in Progress"
-            : raw === "READY_FOR_TESTING"
-            ? "Ready for Testing"
-            : raw === "REVISION_REQUEST"
-            ? "Revision Request"
-            : raw === "DONE"
-            ? "Move to Business"
-            : "N/A"}
+              ? "Testing in Progress"
+              : raw === "READY_FOR_TESTING"
+                ? "Ready for Testing"
+                : raw === "REVISION_REQUEST"
+                  ? "Revision Request"
+                  : raw === "DONE"
+                    ? "Move to Business"
+                    : "N/A"}
         </div>
       );
     },
@@ -182,7 +162,7 @@ export const columns: ColumnDef<Business>[] = [
         }
 
         const response = await done({
-          status: "DONE", 
+          status: "DONE",
           business_id: row.original.id,
           owner_email: row.original.owner_email,
         });
@@ -199,12 +179,6 @@ export const columns: ColumnDef<Business>[] = [
           toast.error("Agent Testing must be in Progress to request revision.");
           return;
         }
-
-        console.log({
-          status: "REVISION_REQUEST",
-          business_id: row.original.id,
-          owner_email: row.original.owner_email,
-        });
 
         const response = await done({
           status: "REVISION_REQUEST",
@@ -224,17 +198,9 @@ export const columns: ColumnDef<Business>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               {isLoading || isCompleting ? (
-                <ChartCircle
-                  size={16}
-                  color="#0B33A4"
-                  className="animate-spin"
-                />
+                <ChartCircle size={16} color="#0B33A4" className="animate-spin" />
               ) : (
-                <More
-                  size={16}
-                  color="#71717A"
-                  className="rotate-90 fill-[#71717A]"
-                />
+                <More size={16} color="#71717A" className="rotate-90 fill-[#71717A]" />
               )}
             </Button>
           </DropdownMenuTrigger>
@@ -246,52 +212,39 @@ export const columns: ColumnDef<Business>[] = [
                     toast.error("Please Start Testing to View the Agent.");
                     return;
                   } else {
-                    navigate(
-                      `/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`
-                    );
+                    navigate(`/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`);
                   }
                 }}
                 className="flex w-full items-center justify-center gap-2.5"
               >
                 <Briefcase color="#000000" size={12} />
-                <span className="flex-1 text-left font-medium text-black text-sm">
-                  View Agent
-                </span>
+                <span className="flex-1 text-left font-medium text-black text-sm">View Agent</span>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div
-                onClick={handleMove}
-                className="flex w-full items-center justify-center gap-2.5"
-              >
-                <Box2 color="#000000" size={12} />
-                <span className="flex-1 text-left font-medium text-black text-sm">
-                  Start Testing
-                </span>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div
-                onClick={handleComplete}
-                className="flex w-full items-center justify-center gap-2.5"
-              >
-                <ArrowRight color="#000000" size={12} />
-                <span className="flex-1 text-left font-medium text-black text-sm">
-                  Move to Business
-                </span>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div
-                onClick={handleRevision}
-                className="flex w-full items-center justify-center gap-2.5"
-              >
-                <ArrowRight color="#000000" size={12} />
-                <span className="flex-1 text-left font-medium text-black text-sm">
-                  Request Revision
-                </span>
-              </div>
-            </DropdownMenuItem>
+            {row.original.dev_agent_status === "READY_FOR_TESTING" && (
+              <DropdownMenuItem>
+                <div onClick={handleMove} className="flex w-full items-center justify-center gap-2.5">
+                  <Box2 color="#000000" size={12} />
+                  <span className="flex-1 text-left font-medium text-black text-sm">Start Testing</span>
+                </div>
+              </DropdownMenuItem>
+            )}
+            {row.original.dev_agent_status === "TESTING_IN_PROGRESS" && (
+              <DropdownMenuItem>
+                <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
+                  <ArrowRight color="#000000" size={12} />
+                  <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
+                </div>
+              </DropdownMenuItem>
+            )}
+            {row.original.dev_agent_status === "DONE" && (
+              <DropdownMenuItem>
+                <div onClick={handleRevision} className="flex w-full items-center justify-center gap-2.5">
+                  <ArrowRight color="#000000" size={12} />
+                  <span className="flex-1 text-left font-medium text-black text-sm">Request Revision</span>
+                </div>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

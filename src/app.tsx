@@ -24,12 +24,8 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Route>
       <Route element={<GlobalLayout />}>
-        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/support" element={<Support />} />
-        {/* <Route path="/call-logs" element={<CallLogs />} /> */}
         <Route path="/dashboard" element={<MyBusinesses />} />
-        {/* <Route path="/my-agents" element={<MyBusinesses />} /> */}
-        {/* <Route path="/edit-password" element={<EditPassword />} /> */}
         <Route path="/my-agents/:id/:a_id" element={<ViewBusiness />} />
       </Route>
       <Route path="/legal-notice" element={<LegalNotice />} />

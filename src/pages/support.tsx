@@ -1,15 +1,18 @@
 import { ChartCircle, Messages } from "iconsax-react";
 import { useState } from "react";
-
+import { useSelector } from "react-redux";
 import DataTable from "@/components/data-table";
 import AddTicket from "@/components/support/add-ticket-sheet";
+import DetailSheet from "@/components/support/detail-sheet";
 import { columns } from "@/components/support/ticket-columns";
 import { Button } from "@/components/ui/button";
+import { RootState } from "@/store";
 import { useGetTicketsQuery } from "@/store/services/ticket";
 
 const Support = () => {
   const [add, setAdd] = useState<boolean>(false);
   const { data, isLoading } = useGetTicketsQuery({});
+  const { selectedTicket } = useSelector((state: RootState) => state.global);
 
   return (
     <>
@@ -34,6 +37,7 @@ const Support = () => {
         )}
       </div>
       <AddTicket open={add} setOpen={setAdd} />
+      <DetailSheet id={selectedTicket} open={!!selectedTicket} />
     </>
   );
 };

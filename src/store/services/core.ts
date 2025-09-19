@@ -39,6 +39,7 @@ export const api = createApi({
     "Ticket",
     "Tickets",
     "Profile",
+    "Notifications",
   ],
   endpoints: (build) => ({
     healthCheck: build.query({

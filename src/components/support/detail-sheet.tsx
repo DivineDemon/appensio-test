@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import { ChartCircle, Send, User } from "iconsax-react";
-import { type Dispatch, type SetStateAction, useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { useGetTicketQuery, usePostCommentMutation } from "@/store/services/ticket";
+import { setSelectedTicket } from "@/store/slices/global";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
@@ -15,7 +17,6 @@ import { Textarea } from "../ui/textarea";
 interface DetailSheetProps {
   id?: string;
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const commentFormSchema = z.object({
@@ -25,18 +26,19 @@ const commentFormSchema = z.object({
   }),
 });
 
-const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
+const DetailSheet = ({ id, open }: DetailSheetProps) => {
+  const dispatch = useDispatch();
+  const { data } = useGetTicketQuery(`${id}`, {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  });
+
   const form = useForm<z.infer<typeof commentFormSchema>>({
     resolver: zodResolver(commentFormSchema),
     defaultValues: {
       message: "",
       status: "open",
     },
-  });
-
-  const { data } = useGetTicketQuery(`${id}`, {
-    skip: !id,
-    refetchOnMountOrArgChange: true,
   });
 
   const [postComment, { isLoading }] = usePostCommentMutation();
@@ -53,7 +55,7 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
     if (response.data) {
       toast.success("Comment posted successfully");
       form.reset();
-      setOpen(false);
+      dispatch(setSelectedTicket(""));
     } else {
       toast.error("Failed to post comment");
     }
@@ -66,7 +68,7 @@ const DetailSheet = ({ id, open, setOpen }: DetailSheetProps) => {
   }, [data, form.setValue]);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={() => dispatch(setSelectedTicket(""))}>
       <SheetContent className="gap-0 rounded-l-3xl sm:min-w-[500px]">
         <SheetHeader>
           <SheetTitle className="p-1.5 font-bold text-[28px] text-primary leading-[28px] md:text-[36px] md:leading-[36px]">

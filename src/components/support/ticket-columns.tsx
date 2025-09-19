@@ -2,11 +2,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { ArrowDown2, ArrowSwapVertical, Briefcase, More, Trash } from "iconsax-react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
-
 import { cn, truncateString } from "@/lib/utils";
 import { useDeleteTicketMutation } from "@/store/services/ticket";
-
+import { setSelectedTicket } from "@/store/slices/global";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import WarningModal from "../warning-modal";
-import DetailSheet from "./detail-sheet";
 
 export const columns: ColumnDef<Ticket>[] = [
   {
@@ -119,8 +118,8 @@ export const columns: ColumnDef<Ticket>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const dispatch = useDispatch();
       const [open, setOpen] = useState<boolean>(false);
-      const [view, setView] = useState<boolean>(false);
       const [selected, setSelected] = useState<string>("");
       const [deleteTicket, { isLoading }] = useDeleteTicketMutation();
 
@@ -158,10 +157,7 @@ export const columns: ColumnDef<Ticket>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <div
-                  onClick={() => {
-                    setSelected(row.original.ticket_id);
-                    setView(true);
-                  }}
+                  onClick={() => dispatch(setSelectedTicket(row.original.ticket_id))}
                   className="flex w-full items-center justify-center gap-2.5"
                 >
                   <Briefcase color="#000000" size={12} />
@@ -184,7 +180,6 @@ export const columns: ColumnDef<Ticket>[] = [
             cta={handleDelete}
             isLoading={isLoading}
           />
-          <DetailSheet open={view} setOpen={setView} id={selected} />
         </>
       );
     },

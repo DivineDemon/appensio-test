@@ -22,6 +22,7 @@ declare type GlobalState = {
   newPassword: string;
   end_date: Date;
   start_date: Date;
+  selectedTicket: string;
 };
 
 declare type PostLogin = {
@@ -427,4 +428,21 @@ declare type UpdateBusinessBody = {
   edit_privilege: boolean;
   first_message: string;
   last_message: string;
+};
+
+declare type UnreadTickets = {
+  n_id: string;
+  content_type: string;
+  ticket_id: string;
+  status: string;
+  content: string;
+  source_panel: string;
+  created_at: string;
+};
+
+declare type UnreadBusinesses = {
+  n_id: string;
+  content: string;
+  created_at: string;
+  business_name: string;
 };
