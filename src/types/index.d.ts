@@ -432,17 +432,28 @@ declare type UpdateBusinessBody = {
 
 declare type UnreadTickets = {
   n_id: string;
-  content_type: string;
-  ticket_id: string;
   status: string;
-  content: string;
-  source_panel: string;
+  is_read: boolean;
+  ticket_id: string;
   created_at: string;
+  source_panel: string;
+  business_name: string;
 };
 
 declare type UnreadBusinesses = {
   n_id: string;
-  content: string;
+  is_read: boolean;
   created_at: string;
   business_name: string;
+  dev_agent_status: string;
+};
+
+declare type MixTickets = {
+  n_id: string;
+  status: string;
+  is_read: boolean;
+  ticket_id?: string;
+  created_at: string;
+  business_name: string;
+  source_panel?: string;
 };

@@ -32,6 +32,20 @@ export const notificationApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Notifications"],
     }),
+    markAllTicketNotificationsAsRead: build.mutation({
+      query: () => ({
+        url: "/notification/ticket/mark-all-as-read",
+        method: "PUT",
+      }),
+      invalidatesTags: ["Notifications"],
+    }),
+    markTicketNotificationAsRead: build.mutation({
+      query: (n_id: string) => ({
+        url: `/notification/ticket/mark-as-read/${n_id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Notifications"],
+    }),
   }),
 });
 
@@ -40,4 +54,6 @@ export const {
   useGetUnreadTicketNotficationsQuery,
   useMarkAllBusinessNotificationsAsReadMutation,
   useMarkBusinessNotificationAsReadMutation,
+  useMarkAllTicketNotificationsAsReadMutation,
+  useMarkTicketNotificationAsReadMutation,
 } = notificationApi;

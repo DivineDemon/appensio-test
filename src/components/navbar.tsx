@@ -1,15 +1,9 @@
 import dayjs from "dayjs";
-import {
-  Briefcase,
-  ChartCircle,
-  Lock,
-  LogoutCurve,
-  Notification,
-  TickCircle,
-  Ticket,
-  User,
-  Warning2,
-} from "iconsax-react";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
+import { ChartCircle, Lock, LogoutCurve, Notification, User, Warning2 } from "iconsax-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +14,7 @@ import {
   useGetUnreadBusinessNotficationsQuery,
   useGetUnreadTicketNotficationsQuery,
   useMarkAllBusinessNotificationsAsReadMutation,
-  useMarkBusinessNotificationAsReadMutation,
+  useMarkAllTicketNotificationsAsReadMutation,
 } from "@/store/services/notification";
 import { setSelectedTicket } from "@/store/slices/global";
 import MaxWidthWrapper from "./max-width-wrapper";
@@ -39,25 +33,52 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const [logout, setLogout] = useState<boolean>(false);
-  const { data: ticketNotifications } = useGetUnreadTicketNotficationsQuery({});
-  const { data: businessNotifications } = useGetUnreadBusinessNotficationsQuery({});
-  const [readBusinessNotification, { isLoading: reading }] = useMarkBusinessNotificationAsReadMutation();
+  const { data: ticketNotifications } = useGetUnreadTicketNotficationsQuery(
+    {},
+    {
+      pollingInterval: 60000,
+    },
+  );
+  const { data: businessNotifications } = useGetUnreadBusinessNotficationsQuery(
+    {},
+    {
+      pollingInterval: 60000,
+    },
+  );
   const [readAllBusinessNotifications, { isLoading: allReading }] = useMarkAllBusinessNotificationsAsReadMutation();
+  const [readAllTicketNotifications, { isLoading: allTicketsReading }] = useMarkAllTicketNotificationsAsReadMutation();
 
-  const handleReadBusinessNotification = async (id: string) => {
-    const response = await readBusinessNotification(id);
+  const allTickets = () => {
+    const tickets: MixTickets[] = [];
 
-    if (response.data) {
-      toast.success("Notification Read Successfully!");
-    } else {
-      toast.error("Failed to Read Notification!");
+    if (ticketNotifications && ticketNotifications.length > 0) {
+      ticketNotifications.map((ticket) => {
+        tickets.push(ticket);
+      });
     }
+
+    if (businessNotifications && businessNotifications.length > 0) {
+      businessNotifications.map((business) => {
+        tickets.push({
+          ticket_id: "",
+          source_panel: "",
+          n_id: business.n_id,
+          is_read: business.is_read,
+          created_at: business.created_at,
+          status: business.dev_agent_status,
+          business_name: business.business_name,
+        });
+      });
+    }
+
+    return tickets;
   };
 
-  const handleReadAllBusinessNotifications = async () => {
-    const response = await readAllBusinessNotifications({});
+  const handleReadAllNotifications = async () => {
+    const ticketsResponse = await readAllTicketNotifications({});
+    const businessResponse = await readAllBusinessNotifications({});
 
-    if (response.data) {
+    if (ticketsResponse.data && businessResponse.data) {
       toast.success("All Notifications Read Successfully!");
     } else {
       toast.error("Failed to Read All Notifications!");
@@ -85,122 +106,88 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="relative flex size-8 items-center justify-center rounded-full bg-gray-200 hover:bg-white">
-                  {ticketNotifications &&
-                    businessNotifications &&
-                    (ticketNotifications?.length > 0 || businessNotifications?.length > 0) && (
-                      <div className="-top-1.5 -right-1.5 absolute flex size-4 items-center justify-center rounded-full bg-primary text-white">
-                        <span className="text-[10px] leading-[10px]">
-                          {ticketNotifications?.length + businessNotifications?.length}
-                        </span>
-                      </div>
-                    )}
+                  {allTickets()?.length > 0 && (
+                    <div className="-top-1.5 -right-1.5 absolute flex size-4 items-center justify-center rounded-full bg-primary text-white">
+                      <span className="text-[10px] leading-[10px]">
+                        {allTickets()?.filter((t) => !t.is_read)?.length}
+                      </span>
+                    </div>
+                  )}
                   <Notification size={20} color="#000000" className="size-5 text-black" />
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="max-h-[400px] w-96 divide-y overflow-y-auto p-0">
-                <DropdownMenuLabel>Ticket Notifications</DropdownMenuLabel>
-                {!ticketNotifications || ticketNotifications?.length === 0 ? (
-                  <div className="flex w-full flex-col items-center justify-center gap-2.5 py-5 text-center text-muted-foreground text-xs">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-muted p-2">
-                      <Warning2 size={20} color="#71717A" className="size-full" />
-                    </div>
-                    <span className="w-full text-center font-medium text-[14px] leading-[14px]">No Notifications.</span>
-                  </div>
-                ) : (
-                  ticketNotifications?.map((notification, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        dispatch(setSelectedTicket(notification.ticket_id));
-                        navigate("/support");
-                      }}
-                      className="flex w-full cursor-pointer items-center justify-center gap-2.5 p-2 hover:bg-muted"
+                <DropdownMenuLabel className="p-0">
+                  <div className="flex w-full items-center justify-center p-2.5">
+                    <span className="w-full text-left">Notifications</span>
+                    <span
+                      onClick={handleReadAllNotifications}
+                      className="w-full cursor-pointer text-right font-normal text-muted-foreground"
                     >
-                      <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
-                        <Ticket size={20} color="#FFFFFF" />
-                      </div>
-                      <div className="flex flex-1 flex-col items-center justify-center gap-1">
-                        <span className="w-full text-left text-[16px] leading-[16px]">{notification.content}</span>
-                        <div className="flex w-full items-center justify-center">
-                          <span className="w-full text-left text-[12px] leading-[12px]">
-                            Ticket Status:&nbsp;
-                            <span
-                              className={cn("font-semibold uppercase", {
-                                "text-red-600": notification.status === "open",
-                                "text-yellow-500": notification.status === "in_progress",
-                                "text-green-600": notification.status === "resolved",
-                              })}
-                            >
-                              {notification.status}
-                            </span>
-                          </span>
-                          <span className="w-full text-right text-[12px] text-muted-foreground leading-[12px]">
-                            {dayjs(notification.created_at).format("DD MMM, YYYY")}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-                <DropdownMenuLabel>
-                  <div className="flex w-full items-center justify-center">
-                    <span className="w-full text-left">Business Notifications</span>
-                    {businessNotifications && businessNotifications?.length > 0 && (
-                      <div
-                        className="flex w-full cursor-pointer items-center justify-end gap-1.5"
-                        onClick={handleReadAllBusinessNotifications}
-                      >
-                        {allReading ? (
-                          <ChartCircle size={16} color="#000000" className="animate-spin" />
-                        ) : (
-                          <TickCircle size={16} color="#000000" />
-                        )}
-                        Mark all as read
-                      </div>
-                    )}
+                      {allReading || allTicketsReading ? (
+                        <ChartCircle size={16} color="#71717A" className="ml-auto animate-spin text-muted-foreground" />
+                      ) : (
+                        "Mark all as Read"
+                      )}
+                    </span>
                   </div>
                 </DropdownMenuLabel>
-                {!businessNotifications || businessNotifications?.length === 0 ? (
-                  <div className="flex w-full flex-col items-center justify-center gap-2.5 py-5 text-center text-muted-foreground text-xs">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-muted p-2">
-                      <Warning2 size={20} color="#71717A" className="size-full" />
-                    </div>
-                    <span className="w-full text-center font-medium text-[14px] leading-[14px]">No Notifications.</span>
-                  </div>
-                ) : (
-                  businessNotifications?.map((notification, idx) => (
-                    <div key={idx} className="flex w-full items-center justify-center gap-2.5 p-2 hover:bg-muted">
-                      <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
-                        <Briefcase size={20} color="#FFFFFF" />
-                      </div>
-                      <div className="flex flex-1 flex-col items-center justify-center gap-1">
-                        <div className="flex w-full items-center justify-center">
-                          <span className="w-full text-left text-[16px] leading-[16px]">
-                            {notification.business_name}
-                          </span>
-                          <div
-                            className="flex w-full cursor-pointer items-center justify-end gap-1.5 text-[12px] leading-[12px]"
-                            onClick={() => handleReadBusinessNotification(notification.n_id)}
-                          >
-                            {reading ? (
-                              <ChartCircle size={16} color="#000000" className="animate-spin" />
-                            ) : (
-                              <TickCircle size={16} color="#000000" />
-                            )}
-                            Mark as read
-                          </div>
+                {allTickets()?.length > 0 ? (
+                  allTickets()?.map((notification, idx) => (
+                    <div
+                      className={cn("flex w-full cursor-pointer items-center justify-center gap-2.5 border-b p-2.5", {
+                        "bg-sky-500/10": !notification.is_read,
+                      })}
+                      key={idx}
+                      onClick={() => {
+                        if (notification.ticket_id || notification.ticket_id !== "") {
+                          dispatch(setSelectedTicket(notification.ticket_id));
+                          navigate("/support");
+                        }
+                      }}
+                    >
+                      <div className="flex size-10 items-center justify-center rounded-full bg-primary">
+                        <div className="flex w-full items-center justify-center text-white">
+                          {notification.business_name.charAt(0).toUpperCase()}
                         </div>
-                        <div className="flex w-full items-center justify-center">
-                          <span className="w-full text-left font-medium text-[12px] text-green-500 capitalize leading-[12px]">
-                            {notification.content.split("_").join(" ")}
+                      </div>
+                      <div className="flex flex-1 flex-col items-center justify-center gap-1.5">
+                        <span className="w-full text-left font-medium text-[16px] leading-[16px]">
+                          {notification.business_name}
+                        </span>
+                        <div className="flex w-full items-center justify-center gap-2.5">
+                          <span
+                            className={cn("flex-1 text-left font-medium text-[14px] leading-[14px]", {
+                              " text-red-500": notification.status === "open",
+                              " text-green-500": notification.status === "resolved",
+                              " text-yellow-500":
+                                notification.status === "in progress" || notification.status === "TESTING_IN_PROGRESS",
+                            })}
+                          >
+                            <span className="text-[#A4A4A4]">
+                              {notification.ticket_id ? "Ticket Status:" : "Agent Status:"}
+                              &nbsp;
+                            </span>
+                            <span className="capitalize">
+                              {notification.status === "TESTING_IN_PROGRESS"
+                                ? "Testing In Progress"
+                                : notification.status}
+                            </span>
                           </span>
-                          <span className="w-full text-right text-[12px] text-muted-foreground leading-[12px]">
-                            {dayjs(notification.created_at).format("DD MMM, YYYY")}
+                          <span className="text-[12px] text-muted-foreground leading-[12px]">
+                            {dayjs(notification.created_at).fromNow()}
                           </span>
                         </div>
                       </div>
                     </div>
                   ))
+                ) : (
+                  <DropdownMenuItem className="flex w-full flex-col items-center justify-center gap-2.5 py-5 text-center text-muted-foreground text-xs">
+                    <div className="flex size-10 items-center justify-center rounded-full bg-muted p-2">
+                      <Warning2 size={20} color="#71717A" className="size-full" />
+                    </div>
+                    <span className="w-full text-center font-medium text-[14px] leading-[14px]">No Notifications.</span>
+                  </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
