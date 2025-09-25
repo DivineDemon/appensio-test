@@ -36,13 +36,13 @@ const Navbar = () => {
   const { data: ticketNotifications } = useGetUnreadTicketNotficationsQuery(
     {},
     {
-      pollingInterval: 60000,
+      pollingInterval: 10000,
     },
   );
   const { data: businessNotifications } = useGetUnreadBusinessNotficationsQuery(
     {},
     {
-      pollingInterval: 60000,
+      pollingInterval: 10000,
     },
   );
   const [readAllBusinessNotifications, { isLoading: allReading }] = useMarkAllBusinessNotificationsAsReadMutation();
