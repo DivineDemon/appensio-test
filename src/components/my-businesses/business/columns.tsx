@@ -237,7 +237,7 @@ export const columns: ColumnDef<Business>[] = [
                 </div>
               </DropdownMenuItem>
             )}
-            {row.original.dev_agent_status === "DONE" && (
+            {row.original.dev_agent_status !== "REVISION_REQUEST" && (
               <DropdownMenuItem>
                 <div onClick={handleRevision} className="flex w-full items-center justify-center gap-2.5">
                   <ArrowRight color="#000000" size={12} />

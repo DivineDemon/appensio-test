@@ -30,8 +30,8 @@ interface AddTicketProps {
 
 const AddTicket = ({ open, setOpen, problem }: AddTicketProps) => {
   const { id: routeId } = useParams<{ id: string }>();
+  const { data: businesses } = useGetMyBusinessesQuery({});
   const [postTicket, { isLoading }] = usePostTicketMutation();
-  const { data: businesses = [] } = useGetMyBusinessesQuery({});
 
   const form = useForm<z.infer<typeof ticketSchema>>({
     resolver: zodResolver(ticketSchema),
@@ -41,7 +41,7 @@ const AddTicket = ({ open, setOpen, problem }: AddTicketProps) => {
     },
   });
 
-  const selectedBusiness = businesses.find((b) => b.id === form.watch("business_id"));
+  const selectedBusiness = businesses?.find((b) => b.id === form.watch("business_id"));
 
   const onSubmit = async (values: z.infer<typeof ticketSchema>) => {
     const response = await postTicket({
@@ -58,6 +58,17 @@ const AddTicket = ({ open, setOpen, problem }: AddTicketProps) => {
     }
   };
 
+  const deduplicateBusinesses = () => {
+    if (!businesses) return [];
+    const seen = new Set<string>();
+
+    return businesses?.filter((b) => {
+      if (seen.has(b.id)) return false;
+      seen.add(b.id);
+      return true;
+    });
+  };
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent className="rounded-l-3xl sm:min-w-[500px]">
@@ -66,7 +77,6 @@ const AddTicket = ({ open, setOpen, problem }: AddTicketProps) => {
             Report Issue
           </SheetTitle>
         </SheetHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 p-5">
             <FormField
@@ -81,7 +91,7 @@ const AddTicket = ({ open, setOpen, problem }: AddTicketProps) => {
                         <SelectValue placeholder="Select a business" />
                       </SelectTrigger>
                       <SelectContent>
-                        {businesses.map((b) => (
+                        {deduplicateBusinesses()?.map((b) => (
                           <SelectItem key={b.id} value={b.id}>
                             {b.name}
                           </SelectItem>

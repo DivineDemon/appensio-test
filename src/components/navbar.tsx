@@ -15,6 +15,8 @@ import {
   useGetUnreadTicketNotficationsQuery,
   useMarkAllBusinessNotificationsAsReadMutation,
   useMarkAllTicketNotificationsAsReadMutation,
+  useMarkBusinessNotificationAsReadMutation,
+  useMarkTicketNotificationAsReadMutation,
 } from "@/store/services/notification";
 import { setSelectedTicket } from "@/store/slices/global";
 import MaxWidthWrapper from "./max-width-wrapper";
@@ -45,6 +47,8 @@ const Navbar = () => {
       pollingInterval: 10000,
     },
   );
+  const [markTicketNotificationAsRead] = useMarkTicketNotificationAsReadMutation();
+  const [markBusinessNotificationAsRead] = useMarkBusinessNotificationAsReadMutation();
   const [readAllBusinessNotifications, { isLoading: allReading }] = useMarkAllBusinessNotificationsAsReadMutation();
   const [readAllTicketNotifications, { isLoading: allTicketsReading }] = useMarkAllTicketNotificationsAsReadMutation();
 
@@ -71,6 +75,7 @@ const Navbar = () => {
       });
     }
 
+    tickets.sort((a, b) => Number(a.is_read) - Number(b.is_read));
     return tickets;
   };
 
@@ -82,6 +87,27 @@ const Navbar = () => {
       toast.success("All Notifications Read Successfully!");
     } else {
       toast.error("Failed to Read All Notifications!");
+    }
+  };
+
+  const handleReadNotification = async (n_id: string, ticket_id?: string) => {
+    let response = null;
+
+    if (ticket_id && ticket_id !== "") {
+      response = await markTicketNotificationAsRead(n_id);
+    } else {
+      response = await markBusinessNotificationAsRead(n_id);
+    }
+
+    if (response.data) {
+      toast.success("Notification Read Successfully!");
+
+      if (ticket_id || ticket_id !== "") {
+        dispatch(setSelectedTicket(ticket_id));
+        navigate("/support");
+      }
+    } else {
+      toast.error("Failed to Read Notification!");
     }
   };
 
@@ -139,12 +165,7 @@ const Navbar = () => {
                         "bg-sky-500/10": !notification.is_read,
                       })}
                       key={idx}
-                      onClick={() => {
-                        if (notification.ticket_id || notification.ticket_id !== "") {
-                          dispatch(setSelectedTicket(notification.ticket_id));
-                          navigate("/support");
-                        }
-                      }}
+                      onClick={() => handleReadNotification(notification.n_id, notification.ticket_id)}
                     >
                       <div className="flex size-10 items-center justify-center rounded-full bg-primary">
                         <div className="flex w-full items-center justify-center text-white">
