@@ -229,14 +229,15 @@ export const columns: ColumnDef<Business>[] = [
                 </div>
               </DropdownMenuItem>
             )}
-            {row.original.dev_agent_status === "TESTING_IN_PROGRESS" && (
-              <DropdownMenuItem>
-                <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
-                  <ArrowRight color="#000000" size={12} />
-                  <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
-                </div>
-              </DropdownMenuItem>
-            )}
+            {row.original.dev_agent_status === "TESTING_IN_PROGRESS" ||
+              (row.original.dev_agent_status !== "REVISION_REQUEST" && (
+                <DropdownMenuItem>
+                  <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
+                    <ArrowRight color="#000000" size={12} />
+                    <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
             {row.original.dev_agent_status !== "REVISION_REQUEST" && (
               <DropdownMenuItem>
                 <div onClick={handleRevision} className="flex w-full items-center justify-center gap-2.5">
