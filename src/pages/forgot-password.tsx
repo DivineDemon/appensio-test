@@ -57,7 +57,7 @@ const ForgotPassword = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex h-screen w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2"
+        className="mx-auto flex w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2"
       >
         <span className="w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[48px]">
           Forgot Password?

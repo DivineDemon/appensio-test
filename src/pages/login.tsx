@@ -43,9 +43,9 @@ const Login = () => {
         e.preventDefault();
         void handleLogin();
       }}
-      className="mx-auto flex h-screen w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2"
+      className="mx-auto flex w-[90%] flex-col items-center justify-center lg:w-2/3 xl:w-1/2"
     >
-      <span className="mt-auto w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[48px]">
+      <span className="w-full text-center font-bold text-[32px] leading-[32px] md:text-[48px] md:leading-[48px]">
         Login to your Account
       </span>
       <span className="mt-2.5 mb-5 w-full text-center text-[#71717A] text-[14px] leading-[14px]">
@@ -89,7 +89,7 @@ const Login = () => {
         </Link>
         .
       </span>
-      <span className="mt-auto mb-10 w-full text-center font-medium text-[12px] text-primary leading-[16px]">
+      <span className="mb-10 w-full text-center font-medium text-[12px] text-primary leading-[16px]">
         <Link to="/legal-notice" className="underline">
           Legal Notice
         </Link>
