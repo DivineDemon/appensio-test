@@ -156,8 +156,11 @@ export const columns: ColumnDef<Business>[] = [
       };
 
       const handleComplete = async () => {
-        if (row.original.dev_agent_status !== "TESTING_IN_PROGRESS") {
-          toast.error("Agent Testing must be in Progress to move to Business.");
+        if (
+          row.original.dev_agent_status !== "TESTING_IN_PROGRESS" &&
+          row.original.dev_agent_status !== "REVISION_REQUEST"
+        ) {
+          toast.error("Agent must be in Testing or Revision Request status to move to Business.");
           return;
         }
 
@@ -208,12 +211,7 @@ export const columns: ColumnDef<Business>[] = [
             <DropdownMenuItem>
               <div
                 onClick={() => {
-                  if (row.original.dev_agent_status === "READY_FOR_TESTING") {
-                    toast.error("Please Start Testing to View the Agent.");
-                    return;
-                  } else {
-                    navigate(`/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`);
-                  }
+                  navigate(`/my-agents/${row.original.id}/${row.original.assistant_id}?name=${row.original.name}`);
                 }}
                 className="flex w-full items-center justify-center gap-2.5"
               >
@@ -229,16 +227,16 @@ export const columns: ColumnDef<Business>[] = [
                 </div>
               </DropdownMenuItem>
             )}
-            {row.original.dev_agent_status === "TESTING_IN_PROGRESS" ||
-              (row.original.dev_agent_status !== "REVISION_REQUEST" && (
-                <DropdownMenuItem>
-                  <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
-                    <ArrowRight color="#000000" size={12} />
-                    <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            {row.original.dev_agent_status !== "REVISION_REQUEST" && (
+            {(row.original.dev_agent_status === "TESTING_IN_PROGRESS" ||
+              row.original.dev_agent_status === "REVISION_REQUEST") && (
+              <DropdownMenuItem>
+                <div onClick={handleComplete} className="flex w-full items-center justify-center gap-2.5">
+                  <ArrowRight color="#000000" size={12} />
+                  <span className="flex-1 text-left font-medium text-black text-sm">Move to Business</span>
+                </div>
+              </DropdownMenuItem>
+            )}
+            {row.original.dev_agent_status === "TESTING_IN_PROGRESS" && (
               <DropdownMenuItem>
                 <div onClick={handleRevision} className="flex w-full items-center justify-center gap-2.5">
                   <ArrowRight color="#000000" size={12} />
